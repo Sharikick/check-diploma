@@ -1,0 +1,39 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction: column;
+}
+
+.title {
+    margin-bottom: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+}

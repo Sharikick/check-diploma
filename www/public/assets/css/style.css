@@ -1,0 +1,36 @@
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/Roboto-Regular.woff2") format("woff2");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+button {
+    font-family: "Roboto";
+}
+
+body {
+    font-family: "Roboto";
+}
+
+.header {
+    padding: 20px 0;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+}
+
+.btn {
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+}
