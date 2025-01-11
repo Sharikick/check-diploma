@@ -8,6 +8,6 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        parent::view('profile');
+        parent::view('profile', 'Профиль');
     }
 }

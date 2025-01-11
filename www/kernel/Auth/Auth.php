@@ -7,12 +7,19 @@ use App\Kernel\Session\SessionInterface;
 
 class Auth implements AuthInterface
 {
-    private SessionInterface $session;
-    private DatabaseInterface $db;
+    public function __construct(
+        private readonly SessionInterface $session,
+        private readonly DatabaseInterface $db
+    ) {
+    }
 
-    public function __construct(SessionInterface $session, DatabaseInterface $db)
+    public function attempt(): void
     {
-        $this->db = $db;
-        $this->session = $session;
+
+    }
+
+    public function check(): bool
+    {
+        return $this->session->has($this->session->get("user_id"));
     }
 }

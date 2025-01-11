@@ -2,95 +2,84 @@
 
 namespace App\Kernel\Router;
 
+use App\Kernel\Auth\Auth;
+use App\Kernel\Auth\AuthInterface;
+use App\Kernel\Database\Database;
 use App\Kernel\Database\DatabaseInterface;
-use App\Kernel\Http\Method;
+use App\Kernel\Http\Redirect;
 use App\Kernel\Http\RedirectInterface;
+use App\Kernel\Http\Request;
 use App\Kernel\Http\RequestInterface;
+use App\Kernel\Session\Session;
 use App\Kernel\Session\SessionInterface;
+use App\Kernel\Validator\Validator;
+use App\Kernel\Validator\ValidatorInterface;
+use App\Kernel\View\View;
 use App\Kernel\View\ViewInterface;
 
 class Router implements RouterInterface
 {
-    private array $routes;
-    private RequestInterface $request;
-    private ViewInterface $view;
-    private RedirectInterface $redirect;
-    private SessionInterface $session;
-    private DatabaseInterface $database;
+    private array $routes = [
+        "GET" => [],
+        "POST" => []
+    ];
 
-    public function __construct(
-        RequestInterface $request,
-        ViewInterface $view,
-        RedirectInterface $redirect,
-        SessionInterface $session,
-        DatabaseInterface $database,
-    ) {
-        $this->routes = $this->ininializationRoutes();
-        $this->request = $request;
-        $this->view = $view;
-        $this->redirect = $redirect;
-        $this->session = $session;
-        $this->database = $database;
+    private readonly ValidatorInterface $validator;
+    private readonly RequestInterface $request;
+    private readonly ViewInterface $view;
+    private readonly RedirectInterface $redirect;
+    private readonly SessionInterface $session;
+    private readonly DatabaseInterface $db;
+    private readonly AuthInterface $auth;
+
+    public function __construct()
+    {
+        $this->validator = new Validator();
+        $this->request = new Request();
+        $this->redirect = new Redirect();
+        $this->session = new Session();
+        $this->db = new Database();
+        $this->auth = new Auth($this->session, $this->db);
+        $this->view = new View($this->session, $this->auth);
     }
 
-    private function ininializationRoutes(): array
+    public function dispatch(): void
     {
-        return [
-            Method::GET->value => [],
-            Method::POST->value => [],
-            Method::PUT->value => [],
-            Method::DELETE->value => []
-        ];
-    }
+        $method = $this->request->getMethod();
+        $path = $this->request->getPath();
 
-    public function dispatch(Method $method, string $path): void
-    {
-        if (isset($this->routes[$method->value][$path])) {
-            $handler = $this->routes[$method->value][$path];
-            if (is_callable($handler)) {
-                call_user_func($handler);
-                return;
-            } else {
-                [$controller, $method] = $handler;
+        if (isset($this->routes[$method][$path])) {
+            [$Controller, $method] = $this->routes[$method][$path];
+            $controller = new $Controller();
 
-                $controller = new $controller();
-                call_user_func([$controller, 'setView'], $this->view);
-                call_user_func([$controller, 'setRequest'], $this->request);
-                call_user_func([$controller, 'setRedirect'], $this->redirect);
-                call_user_func([$controller, 'setSession'], $this->session);
-                call_user_func([$controller, 'setDatabase'], $this->database);
+            call_user_func([$controller, 'setValidator'], $this->validator);
+            call_user_func([$controller, 'setView'], $this->view);
+            call_user_func([$controller, 'setRequest'], $this->request);
+            call_user_func([$controller, 'setRedirect'], $this->redirect);
+            call_user_func([$controller, 'setSession'], $this->session);
+            call_user_func([$controller, 'setDB'], $this->db);
+            call_user_func([$controller, 'setAuth'], $this->auth);
 
-                call_user_func([$controller, $method]);
-                return;
-            }
+            call_user_func([$controller, $method]);
+            return;
         }
 
-        include_once APP_PATH . '/views/not-found.php';
+        include_once APP_PATH . '/view/page/not-found.php';
     }
 
-    public function get(string $path, callable | array $handler): void
+    public function get(string $path, array $handler): void
     {
-        $this->addRoute($path, Method::GET, $handler);
+        $this->addRoute($path, "GET", $handler);
     }
 
-    public function post(string $path, callable | array $handler): void
+    public function post(string $path, array $handler): void
     {
-        $this->addRoute($path, Method::POST, $handler);
+        $this->addRoute($path, "POST", $handler);
     }
 
-    public function put(string $path, callable | array $handler): void
+    private function addRoute(string $path, string $method, array $handler): void
     {
-        $this->addRoute($path, Method::PUT, $handler);
-    }
-
-    public function delete(string $path, callable | array $handler): void
-    {
-        $this->addRoute($path, Method::DELETE, $handler);
-    }
-
-    private function addRoute(string $path, Method $method, callable | array $handler): void
-    {
-        $this->routes[$method->value][$path] = $handler;
+        $this->routes[$method][$path] = $handler;
     }
 
 }

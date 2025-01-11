@@ -2,23 +2,27 @@
 
 namespace App\Kernel\Controller;
 
+use App\Kernel\Auth\AuthInterface;
 use App\Kernel\Database\DatabaseInterface;
 use App\Kernel\Http\RedirectInterface;
 use App\Kernel\Http\RequestInterface;
 use App\Kernel\Session\SessionInterface;
+use App\Kernel\Validator\ValidatorInterface;
 use App\Kernel\View\ViewInterface;
 
 abstract class Controller
 {
-    public ViewInterface $view;
-    public RequestInterface $request;
-    public RedirectInterface $redirect;
-    public SessionInterface $session;
-    public DatabaseInterface $database;
+    protected readonly ViewInterface $view;
+    protected readonly RequestInterface $request;
+    protected readonly RedirectInterface $redirect;
+    protected readonly SessionInterface $session;
+    protected readonly DatabaseInterface $db;
+    protected readonly AuthInterface $auth;
+    protected readonly ValidatorInterface $validator;
 
-    public function view(string $name)
+    public function view(string $name, string $title)
     {
-        $this->view->page($name);
+        $this->view->page($name, $title);
     }
 
     public function setView(ViewInterface $view): void
@@ -41,8 +45,18 @@ abstract class Controller
         $this->session = $session;
     }
 
-    public function setDatabase(DatabaseInterface $database): void
+    public function setDB(DatabaseInterface $db): void
     {
-        $this->database = $database;
+        $this->db = $db;
+    }
+
+    public function setAuth(AuthInterface $auth): void
+    {
+        $this->auth = $auth;
+    }
+
+    public function setValidator(ValidatorInterface $validator): void
+    {
+        $this->validator = $validator;
     }
 }

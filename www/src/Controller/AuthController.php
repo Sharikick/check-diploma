@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Kernel\Controller\Controller;
-use App\Service\AuthService;
-use App\Service\AuthServiceInterface;
+use App\Service\Auth\AuthService;
+use App\Service\Auth\AuthServiceInterface;
 
 class AuthController extends Controller
 {
@@ -12,17 +12,17 @@ class AuthController extends Controller
 
     public function loginPage(): void
     {
-        parent::view("login");
+        parent::view("login", 'Авторизация');
     }
 
     public function registerPage(): void
     {
-        parent::view("register");
+        parent::view("register", 'Регистрация');
     }
 
     public function register(): void
     {
-        $this->service()->register($this->request);
+        $this->service()->register();
     }
 
     private function service(): AuthServiceInterface
@@ -32,7 +32,8 @@ class AuthController extends Controller
                 $this->request,
                 $this->session,
                 $this->redirect,
-                $this->database
+                $this->db,
+                $this->validator
             );
         }
 

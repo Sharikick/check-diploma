@@ -1,12 +1,3 @@
-<?php
-/**
-*  @var \App\Kernel\Session\SessionInterface $session
-*  @var \App\Kernel\Auth\AuthInterface $auth
-*/
-
-$user = $auth->user();
-?>
-
 <!DOCTYPE html>
 <html>
 
@@ -17,8 +8,6 @@ $user = $auth->user();
     </head>
 
     <body>
-        <h1>FirstName: <?=$user['firstname']?></h1>
+        <h1>Profile</h1>
     </body>
 </html>
-
-<?php

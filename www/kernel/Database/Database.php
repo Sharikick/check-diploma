@@ -42,7 +42,8 @@ class Database implements DatabaseInterface
         $this->pdo = null;
     }
 
-    public function insert(string $table, array $data): int{
+    public function insert(string $table, array $data): int
+    {
         $fields = array_keys($data);
 
         $columns = implode(', ', $fields);
@@ -59,5 +60,16 @@ class Database implements DatabaseInterface
         }
 
         return (int) $this->pdo->lastInsertId();
+    }
+
+    public function first(string $table, array $conditions = [])
+    {
+
+    }
+
+    public function existUserByEmail(string $email): bool
+    {
+
+        return true;
     }
 }

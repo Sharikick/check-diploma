@@ -8,6 +8,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        parent::view('home');
+        parent::view('home', 'Home');
     }
 }

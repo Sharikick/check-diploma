@@ -1,5 +1,5 @@
-.page {
-    min-height: 100vh;
+.app {
+    height: 100vh;
     display: flex;
     justify-content:center;
     align-items:center;
@@ -7,10 +7,13 @@
 }
 
 .title {
-    margin-bottom: 20px;
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 40px;
 }
 
 .form {
+    width: 36%;
     display: flex;
     flex-direction: column;
 }
@@ -29,11 +32,21 @@
 }
 
 .button {
-    padding: 5px 10px;
+    padding: 10px 16px;
     cursor: pointer;
+    color: #fff;
+    border-radius: 4px;
+    background-color: #2196f3;
+    transition: background-color 0.2s linear;
+}
+
+.button:hover {
+    background-color: blue;
 }
 
 .input {
     width: 100%;
     padding: 10px;
+    border: 1px solid #333;
+    border-radius: 8px;
 }
